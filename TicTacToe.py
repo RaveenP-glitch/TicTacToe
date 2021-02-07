@@ -1,3 +1,4 @@
+
 #Making a TicTacToe game in python
 
 #board
@@ -34,8 +35,8 @@ def play_game():
     #Display initial board
     display_board()
     
-#While the game is still going
-while game_still_going:
+    #While the game is still going
+    while game_still_going:
         
         #handle a single turn of an arbitrary player    
         handle_turn(current_player)
@@ -45,30 +46,56 @@ while game_still_going:
 
         #Flip to the other player
         flip_player()
+        
+        
 
 
-#The game has ended
-
-if winner == "X" or winner == "O":
-    print(winner + " won.")
-
-elif winner == None:
-    print("Tie.")
 
 
-#Handle a singel turn of an arbitrary player
+    #The game has ended
+
+    if winner == "X" or winner == "O":
+        print(winner + " won.")
+        check_availability()
+
+    elif winner == None:
+        print("Tie.")
+        check_availability()
+    return
+
+
+#Handle a single turn of an arbitrary player
 def handle_turn(player):
+    print(player + "'s turn.")
     position = input("Choose a position from 1-9: ")
-    position = int(position) - 1
+
+    valid = False
+    while not valid:
+
+        while position not in ["1","2","3","4","5","6","7","8","9"]:
+            position = input("Invalid input. Choose a position from 1-9: ")
+
+
+        position = int(position) - 1
+
+        if board[position] == "-":
+            valid = True
+        else:
+            print("You can't go there. Go again.")
+
 
     board[position] = player
 
     display_board()
   
+ 
+
+
 
 def check_if_game_over():
         check_for_winner()
         check_if_tie()
+      
 
 
 def check_for_winner():
@@ -101,7 +128,6 @@ def check_for_winner():
 
 def check_rows():
 
-   
     #Set up global variables
     global game_still_going
     #Check if any of the rows have all the same value (and is not empty)
@@ -147,7 +173,7 @@ def check_diagonals():
     #Set up global variables
     global game_still_going
     #Check if any of the diagonals have all the same value (and is not empty)
-    diagonal_1 = board[0] == board[6] == board[8] != "-"
+    diagonal_1 = board[0] == board[4] == board[8] != "-"
     diagonal_2 = board[6] == board[4] == board[2] != "-"
   
     #If any row does have a match, flag that there is a win
@@ -163,5 +189,50 @@ def check_diagonals():
     return
 
 def check_if_tie():
-    #code goes here
+    #golbal variable we need
+    global game_still_going
+    if "-" not in board:
+        game_still_going = False
     return
+
+def flip_player():
+    #global variable we need
+    global current_player
+    #if the current player was x, then change it to o
+    if current_player == "X":
+        current_player = "O"
+    #if the current player was o, then change it to x
+    elif current_player == "O":
+        current_player = "X"
+    return
+
+
+def clear_board():
+    
+    global board
+    global winner
+    global game_still_going
+    global current_player
+    
+    current_player = "X"
+    board = ["-", "-", "-",
+             "-", "-", "-",
+             "-", "-", "-",]
+    winner = None
+    game_still_going = True
+    
+    return
+
+
+def check_availability():
+    ans = input("Do you want to play again? (Y or N): ")
+    if ans =="Y":
+        clear_board()
+       
+        play_game()
+    else:
+        print("Have a nice day!")
+        
+
+play_game()
+    
